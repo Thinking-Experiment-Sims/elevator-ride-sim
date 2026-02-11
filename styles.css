@@ -370,6 +370,12 @@ body {
   cursor: default;
 }
 
+.attribution {
+  margin-top: 0.9rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 @media (max-width: 980px) {
   .scene-wrap {
     grid-template-columns: 1fr;

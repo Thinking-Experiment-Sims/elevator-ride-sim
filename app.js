@@ -20,11 +20,14 @@ const els = {
   go10: document.getElementById("go10"),
   go20: document.getElementById("go20"),
   go1: document.getElementById("go1"),
+  pause: document.getElementById("pause"),
+  reset: document.getElementById("reset"),
 };
 
 let currentFloor = 1;
 let targetFloor = 1;
 let running = false;
+let rideInProgress = false;
 let simTime = 0;
 let rafId = null;
 let lastMs = 0;
@@ -43,20 +46,53 @@ function wireEvents() {
   els.go10.addEventListener("click", () => startRide(10));
   els.go20.addEventListener("click", () => startRide(20));
   els.go1.addEventListener("click", () => startRide(1));
+  els.pause.addEventListener("click", togglePause);
+  els.reset.addEventListener("click", resetRide);
 }
 
 function startRide(nextFloor) {
-  if (running || nextFloor === currentFloor) return;
+  if (rideInProgress || nextFloor === currentFloor) return;
 
   targetFloor = nextFloor;
   config = makeConfig(currentFloor, targetFloor);
   profile = buildRideProfile(config);
   simTime = 0;
   running = true;
+  rideInProgress = true;
   updateButtons();
 
   lastMs = performance.now();
   requestFrame();
+}
+
+function togglePause() {
+  if (!rideInProgress) return;
+
+  if (running) {
+    running = false;
+    cancelFrame();
+    updateButtons();
+    return;
+  }
+
+  running = true;
+  lastMs = performance.now();
+  updateButtons();
+  requestFrame();
+}
+
+function resetRide() {
+  if (!rideInProgress && simTime === 0) return;
+
+  running = false;
+  rideInProgress = false;
+  cancelFrame();
+  targetFloor = currentFloor;
+  simTime = 0;
+  config = makeConfig(currentFloor, targetFloor);
+  profile = buildRideProfile(config);
+  updateButtons();
+  render(sampleStateAtTime(profile, 0, config));
 }
 
 function requestFrame() {
@@ -84,6 +120,7 @@ function onFrame(now) {
 
   if (simTime >= profile.totalTime) {
     running = false;
+    rideInProgress = false;
     currentFloor = targetFloor;
     updateButtons();
 
@@ -135,10 +172,13 @@ function makeConfig(fromFloor, toFloor) {
 }
 
 function updateButtons() {
-  const disabled = running;
-  els.go10.disabled = disabled || currentFloor === 10;
-  els.go20.disabled = disabled || currentFloor === 20;
-  els.go1.disabled = disabled || currentFloor === 1;
+  const lockFloorButtons = rideInProgress;
+  els.go10.disabled = lockFloorButtons || currentFloor === 10;
+  els.go20.disabled = lockFloorButtons || currentFloor === 20;
+  els.go1.disabled = lockFloorButtons || currentFloor === 1;
+  els.pause.disabled = !rideInProgress;
+  els.pause.textContent = running ? "Pause" : "Resume";
+  els.reset.disabled = !rideInProgress && simTime === 0;
 }
 
 /** @param {number} fn @param {number} fg */
