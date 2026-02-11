@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Elevator Ride Simulation</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="https://vladimirlopez.github.io/the-thinking-experiment/assets/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="https://vladimirlopez.github.io/the-thinking-experiment/assets/favicon-16.png" />
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <p id="status-line" class="status-line"><strong>Status:</strong> At rest on floor 1.</p>
+
+      <section class="scene-wrap">
+        <section class="elevator-panel" aria-label="Elevator scene">
+          <div class="elevator-box">
+            <div id="floor-label" class="floor-label">Floor: 1</div>
+
+            <div class="pug-stage" aria-hidden="true">
+              <div id="bubble" class="bubble">Push a button and let's get started!</div>
+              <div class="pug">
+                <div class="ear ear-left"></div>
+                <div class="ear ear-right"></div>
+                <div class="face">
+                  <span class="wrinkle wrinkle-top"></span>
+                  <span class="wrinkle wrinkle-mid"></span>
+                  <span class="muzzle"></span>
+                  <span class="eye eye-left"></span>
+                  <span class="eye eye-right"></span>
+                  <span class="nose"></span>
+                  <span class="tongue"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="fbd-panel" aria-label="Free body diagram">
+          <h2>Free Body Diagram</h2>
+          <div class="fbd-stage">
+            <div class="fbd-pug" aria-hidden="true">
+              <div class="fbd-face"></div>
+            </div>
+
+            <div id="fn-arrow" class="fbd-arrow up" aria-hidden="true">
+              <span id="fn-label">F_norm = 784 N</span>
+              <i class="congruency-mark"></i>
+            </div>
+
+            <div id="fg-arrow" class="fbd-arrow down" aria-hidden="true">
+              <span id="fg-label">F_grav = 784 N</span>
+              <i class="congruency-mark"></i>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="meta" role="status" aria-live="polite">
+        <span id="accel-line">a = 0.00 m/s^2 (none)</span>
+        <span id="sense-line">Sensation: normal</span>
+        <span id="compare-line">F_N = F_g</span>
+      </section>
+
+      <section class="controls" aria-label="Floor buttons">
+        <button id="go10" type="button">Go to Floor 10</button>
+        <button id="go20" type="button">Go to Floor 20</button>
+        <button id="go1" type="button">Go to Floor 1</button>
+      </section>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
