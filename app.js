@@ -4,7 +4,9 @@ const GRAVITY = 9.81;
 const FLOOR_HEIGHT_M = 3.0;
 const MASS_KG = 80;
 const MAX_SPEED_MPS = 4.0;
-const ACCEL_MPS2 = 4.0;
+const ACCEL_FLOORS = 3;
+const ACCEL_DISTANCE_M = ACCEL_FLOORS * FLOOR_HEIGHT_M;
+const ACCEL_MPS2 = (MAX_SPEED_MPS * MAX_SPEED_MPS) / (2 * ACCEL_DISTANCE_M);
 
 const els = {
   statusLine: document.getElementById("status-line"),
