@@ -227,37 +227,32 @@ function getBubbleText(phase, sensation) {
 
 /** @param {number} fn @param {number} fg @param {"gt"|"lt"|"eq"} relation */
 function renderFbdArrows(fn, fg, relation) {
-  const maxHeight = 180;
-  const minHeight = 70;
-  const equalHeight = 140;
+  const fgHeight = 140;
+  const minFnHeight = 70;
+  const maxFnHeight = 180;
 
   els.fnArrow.classList.remove("larger", "equal");
   els.fgArrow.classList.remove("larger", "equal");
 
+  // Gravity magnitude is constant (mg), so its arrow length stays fixed.
+  els.fgArrow.style.height = `${fgHeight}px`;
+
   if (relation === "eq") {
-    els.fnArrow.style.height = `${equalHeight}px`;
-    els.fgArrow.style.height = `${equalHeight}px`;
+    els.fnArrow.style.height = `${fgHeight}px`;
     els.fnArrow.classList.add("equal");
     els.fgArrow.classList.add("equal");
     return;
   }
 
-  const larger = relation === "gt" ? fn : fg;
-  const smaller = relation === "gt" ? fg : fn;
-  const largerHeight = maxHeight;
-  let smallerHeight = clamp((smaller / larger) * maxHeight, minHeight, maxHeight - 22);
-
-  if (largerHeight - smallerHeight < 24) {
-    smallerHeight = largerHeight - 24;
+  let fnHeight = clamp((fn / Math.max(fg, 1)) * fgHeight, minFnHeight, maxFnHeight);
+  if (Math.abs(fnHeight - fgHeight) < 24) {
+    fnHeight = relation === "gt" ? fgHeight + 24 : fgHeight - 24;
   }
+  els.fnArrow.style.height = `${fnHeight}px`;
 
   if (relation === "gt") {
-    els.fnArrow.style.height = `${largerHeight}px`;
-    els.fgArrow.style.height = `${smallerHeight}px`;
     els.fnArrow.classList.add("larger");
   } else {
-    els.fnArrow.style.height = `${smallerHeight}px`;
-    els.fgArrow.style.height = `${largerHeight}px`;
     els.fgArrow.classList.add("larger");
   }
 }
