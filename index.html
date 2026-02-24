@@ -11,6 +11,14 @@
   </head>
   <body>
     <main class="app">
+      <header class="sim-header">
+        <h1>Elevator Ride: Apparent Weight and Normal Force</h1>
+        <p>
+          Self-study focus: use acceleration direction and force comparisons to explain when Zorro feels
+          heavier, lighter, or normal.
+        </p>
+      </header>
+
       <section class="top-row">
         <p id="status-line" class="status-line"><strong>Status:</strong> At rest on floor 1.</p>
         <button id="theme-toggle" type="button" class="theme-toggle">Light mode</button>
@@ -98,6 +106,38 @@
           <button id="go1" type="button">Go to Floor 1</button>
           <button id="pause" type="button" disabled>Pause</button>
           <button id="reset" type="button" disabled>Reset</button>
+        </div>
+      </section>
+
+      <section class="study-panel" aria-labelledby="study-title">
+        <h2 id="study-title">Physics Guide for Self-Study</h2>
+        <p id="physics-explain" class="physics-explain">
+          Apparent weight comes from the normal force. If F_N = F_g, sensation is normal.
+        </p>
+        <p id="direction-note" class="direction-note">
+          Motion direction and acceleration direction are not always the same.
+        </p>
+
+        <div class="study-columns">
+          <article class="study-card">
+            <h3>Core Model</h3>
+            <ul class="rule-list">
+              <li>F_net = F_N - F_g = m a (upward positive).</li>
+              <li>F_g = m g is constant for a fixed mass.</li>
+              <li>F_N > F_g -> heavier sensation.</li>
+              <li>F_N = F_g -> normal sensation.</li>
+              <li>F_N < F_g -> lighter sensation.</li>
+            </ul>
+          </article>
+
+          <article class="study-card">
+            <h3>Try These Prompts</h3>
+            <ol class="prompt-list">
+              <li>Run 1 -> 20 and record floor ranges for speeding up, cruising, and slowing down.</li>
+              <li>Find a moment when Zorro is moving up but feeling lighter (or moving down but feeling heavier).</li>
+              <li>Use F_N vs F_g and acceleration direction to justify your claim in one sentence.</li>
+            </ol>
+          </article>
         </div>
       </section>
 

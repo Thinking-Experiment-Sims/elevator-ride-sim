@@ -23,6 +23,8 @@ const els = {
   accelLine: document.getElementById("accel-line"),
   senseLine: document.getElementById("sense-line"),
   compareLine: document.getElementById("compare-line"),
+  physicsExplain: document.getElementById("physics-explain"),
+  directionNote: document.getElementById("direction-note"),
   simSpeed: document.getElementById("sim-speed"),
   simSpeedOut: document.getElementById("sim-speed-out"),
   themeToggle: document.getElementById("theme-toggle"),
@@ -180,6 +182,7 @@ function render(state) {
   renderAccelerationIndicator(accelDir);
   els.bubble.textContent = getBubbleText(state.phase, state.sensation);
   renderFbdArrows(state.fn, state.fg, relation);
+  updatePhysicsGuide(state, relation, accelDir, floorInteger);
 }
 
 function updateSimSpeedOutput() {
@@ -305,6 +308,51 @@ function renderAccelerationIndicator(accelDir) {
   els.accelArrow.classList.add("accel-none");
   els.accelDirection.classList.add("dir-none");
   els.accelDirection.textContent = "none";
+}
+
+/**
+ * @param {import("./physics.js").SimulationState} state
+ * @param {"gt"|"lt"|"eq"} relation
+ * @param {"upward"|"downward"|"none"} accelDir
+ * @param {number} floor
+ */
+function updatePhysicsGuide(state, relation, accelDir, floor) {
+  if (!els.physicsExplain || !els.directionNote) return;
+
+  const fnN = Math.round(state.fn);
+  const fgN = Math.round(state.fg);
+  const relSymbol = relation === "gt" ? ">" : relation === "lt" ? "<" : "=";
+  const sensationText =
+    relation === "gt" ? "heavier" : relation === "lt" ? "lighter" : "normal";
+
+  els.physicsExplain.textContent =
+    `Apparent weight is the normal force. Here F_N = ${fnN} N ${relSymbol} ` +
+    `F_g = ${fgN} N, so Zorro feels ${sensationText}.`;
+
+  const speedTol = 0.04;
+  const motionDir =
+    state.v > speedTol ? "upward" : state.v < -speedTol ? "downward" : "none";
+
+  if (accelDir === "none") {
+    els.directionNote.textContent =
+      `At floor ${floor}, acceleration is zero, so net force is near zero and sensation is normal.`;
+    return;
+  }
+
+  if (motionDir === "none") {
+    els.directionNote.textContent =
+      `At floor ${floor}, acceleration is ${accelDir}; speed is starting to change from rest.`;
+    return;
+  }
+
+  if (motionDir === accelDir) {
+    els.directionNote.textContent =
+      `At floor ${floor}, motion and acceleration are both ${accelDir}, so speed increases in that direction.`;
+    return;
+  }
+
+  els.directionNote.textContent =
+    `At floor ${floor}, motion is ${motionDir} but acceleration is ${accelDir}, so the elevator is slowing down.`;
 }
 
 /** @param {number} fn @param {number} fg @param {"gt"|"lt"|"eq"} relation */
