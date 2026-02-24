@@ -25,6 +25,7 @@ const els = {
   compareLine: document.getElementById("compare-line"),
   simSpeed: document.getElementById("sim-speed"),
   simSpeedOut: document.getElementById("sim-speed-out"),
+  themeToggle: document.getElementById("theme-toggle"),
   go10: document.getElementById("go10"),
   go20: document.getElementById("go20"),
   go1: document.getElementById("go1"),
@@ -40,12 +41,14 @@ let simTime = 0;
 let simSpeed = 1;
 let rafId = null;
 let lastMs = 0;
+let theme = "dark";
 let config = makeConfig(currentFloor, targetFloor);
 let profile = buildRideProfile(config);
 
 init();
 
 function init() {
+  initTheme();
   wireEvents();
   updateSimSpeedOutput();
   updateButtons();
@@ -58,6 +61,7 @@ function wireEvents() {
   els.go1.addEventListener("click", () => startRide(1));
   els.pause.addEventListener("click", togglePause);
   els.reset.addEventListener("click", resetRide);
+  els.themeToggle.addEventListener("click", toggleTheme);
   els.simSpeed.addEventListener("input", () => {
     simSpeed = clamp(Number(els.simSpeed.value), 0.5, 3);
     updateSimSpeedOutput();
@@ -101,9 +105,10 @@ function resetRide() {
   running = false;
   rideInProgress = false;
   cancelFrame();
-  targetFloor = currentFloor;
+  currentFloor = 1;
+  targetFloor = 1;
   simTime = 0;
-  config = makeConfig(currentFloor, targetFloor);
+  config = makeConfig(1, 1);
   profile = buildRideProfile(config);
   updateButtons();
   render(sampleStateAtTime(profile, 0, config));
@@ -181,6 +186,27 @@ function updateSimSpeedOutput() {
   const label = `${simSpeed.toFixed(2)}x`;
   els.simSpeedOut.value = label;
   els.simSpeedOut.textContent = label;
+}
+
+function initTheme() {
+  const saved = window.localStorage.getItem("elevator_theme");
+  if (saved === "light" || saved === "dark") {
+    theme = saved;
+  } else {
+    theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  }
+  applyTheme();
+}
+
+function toggleTheme() {
+  theme = theme === "dark" ? "light" : "dark";
+  applyTheme();
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute("data-theme", theme);
+  els.themeToggle.textContent = theme === "dark" ? "Light mode" : "Dark mode";
+  window.localStorage.setItem("elevator_theme", theme);
 }
 
 /** @param {number} fromFloor @param {number} toFloor */
