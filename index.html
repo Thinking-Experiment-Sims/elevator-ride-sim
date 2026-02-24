@@ -16,6 +16,13 @@
       <section class="scene-wrap">
         <section class="elevator-panel" aria-label="Elevator scene">
           <div class="elevator-box">
+            <div class="floor-thermometer" aria-live="polite">
+              <div class="thermo-title">Floor</div>
+              <div class="thermo-track">
+                <div id="thermo-fill" class="thermo-fill phase-stopped"></div>
+              </div>
+              <div id="thermo-floor" class="thermo-floor">1</div>
+            </div>
             <div id="floor-label" class="floor-label">Floor: 1</div>
 
             <div class="cat-stage" aria-hidden="true">
@@ -44,13 +51,24 @@
             </div>
 
             <div id="fn-arrow" class="fbd-arrow up" aria-hidden="true">
-              <span id="fn-label">F_norm = 784 N</span>
+              <span id="fn-label">F_norm = 44 N</span>
               <i class="congruency-mark"></i>
             </div>
 
             <div id="fg-arrow" class="fbd-arrow down" aria-hidden="true">
-              <span id="fg-label">F_grav = 784 N</span>
+              <span id="fg-label">F_grav = 44 N</span>
               <i class="congruency-mark"></i>
+            </div>
+
+            <div class="accel-indicator" aria-live="polite">
+              <p class="accel-indicator-title">Acceleration</p>
+              <div id="accel-arrow" class="accel-arrow accel-none" aria-hidden="true">
+                <span class="accel-head accel-head-up"></span>
+                <span class="accel-shaft"></span>
+                <span class="accel-head accel-head-down"></span>
+                <span id="accel-marker" class="accel-marker">a</span>
+              </div>
+              <p id="accel-direction" class="accel-direction dir-none">none</p>
             </div>
           </div>
         </section>
@@ -63,11 +81,19 @@
       </section>
 
       <section class="controls" aria-label="Floor buttons">
-        <button id="go10" type="button">Go to Floor 10</button>
-        <button id="go20" type="button">Go to Floor 20</button>
-        <button id="go1" type="button">Go to Floor 1</button>
-        <button id="pause" type="button" disabled>Pause</button>
-        <button id="reset" type="button" disabled>Reset</button>
+        <div class="sim-speed-control">
+          <label for="sim-speed">Simulation speed</label>
+          <input id="sim-speed" type="range" min="0.5" max="3" step="0.25" value="1" />
+          <output id="sim-speed-out" for="sim-speed">1.00x</output>
+        </div>
+
+        <div class="control-buttons">
+          <button id="go10" type="button">Go to Floor 10</button>
+          <button id="go20" type="button">Go to Floor 20</button>
+          <button id="go1" type="button">Go to Floor 1</button>
+          <button id="pause" type="button" disabled>Pause</button>
+          <button id="reset" type="button" disabled>Reset</button>
+        </div>
       </section>
 
       <p class="attribution">

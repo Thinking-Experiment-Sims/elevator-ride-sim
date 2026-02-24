@@ -7,6 +7,10 @@
   --gold: var(--gold-500);
   --gold-2: var(--gold-400);
   --arrow: #ff5a4a;
+  --phase-accelerating: #d8b767;
+  --phase-cruising: #a9b2c3;
+  --phase-decelerating: #e18264;
+  --phase-stopped: #6f7886;
 }
 
 * {
@@ -49,6 +53,63 @@ body {
   border: 3px solid color-mix(in srgb, var(--gold) 55%, #000 45%);
   border-radius: 0.65rem;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
+.floor-thermometer {
+  position: absolute;
+  left: 0.9rem;
+  top: 0.9rem;
+  width: 68px;
+  z-index: 2;
+  text-align: center;
+}
+
+.thermo-title {
+  font-size: 0.76rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.thermo-track {
+  height: 430px;
+  border-radius: 999px;
+  border: 2px solid color-mix(in srgb, var(--gold) 55%, #151515 45%);
+  background: color-mix(in srgb, var(--bg-900) 80%, #000 20%);
+  position: relative;
+  overflow: hidden;
+}
+
+.thermo-fill {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 0%;
+  transition: height 140ms linear, background-color 140ms linear;
+}
+
+.thermo-fill.phase-accelerating {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--phase-accelerating) 80%, #fff 20%), var(--phase-accelerating));
+}
+
+.thermo-fill.phase-cruising {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--phase-cruising) 70%, #fff 30%), var(--phase-cruising));
+}
+
+.thermo-fill.phase-decelerating {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--phase-decelerating) 80%, #fff 20%), var(--phase-decelerating));
+}
+
+.thermo-fill.phase-stopped {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--phase-stopped) 75%, #fff 25%), var(--phase-stopped));
+}
+
+.thermo-floor {
+  margin-top: 0.32rem;
+  color: var(--gold-2);
+  font-weight: 700;
 }
 
 .floor-label {
@@ -325,6 +386,118 @@ body {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--gold) 55%, #000 45%);
 }
 
+.accel-indicator {
+  position: absolute;
+  right: 0.25rem;
+  top: 0.25rem;
+  width: 120px;
+  text-align: center;
+}
+
+.accel-indicator-title {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.accel-arrow {
+  position: relative;
+  width: 56px;
+  height: 230px;
+  margin: 0.35rem auto 0.2rem;
+}
+
+.accel-shaft {
+  position: absolute;
+  left: calc(50% - 3px);
+  top: 12px;
+  bottom: 12px;
+  width: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--gold) 45%, #222 55%);
+}
+
+.accel-head {
+  position: absolute;
+  left: calc(50% - 10px);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+}
+
+.accel-head-up {
+  top: 0;
+  border-bottom: 14px solid color-mix(in srgb, var(--gold) 45%, #222 55%);
+}
+
+.accel-head-down {
+  bottom: 0;
+  border-top: 14px solid color-mix(in srgb, var(--gold) 45%, #222 55%);
+}
+
+.accel-marker {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: #121212;
+  background: var(--phase-stopped);
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  transition: top 160ms ease, background-color 160ms linear;
+}
+
+.accel-arrow.accel-up .accel-marker {
+  top: 14%;
+  background: var(--phase-accelerating);
+}
+
+.accel-arrow.accel-down .accel-marker {
+  top: 86%;
+  background: var(--phase-decelerating);
+}
+
+.accel-arrow.accel-none .accel-marker {
+  top: 50%;
+  background: var(--phase-stopped);
+}
+
+.accel-arrow.accel-up .accel-head-up {
+  border-bottom-color: var(--phase-accelerating);
+}
+
+.accel-arrow.accel-down .accel-head-down {
+  border-top-color: var(--phase-decelerating);
+}
+
+.accel-direction {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.accel-direction.dir-up {
+  color: var(--phase-accelerating);
+}
+
+.accel-direction.dir-down {
+  color: var(--phase-decelerating);
+}
+
+.accel-direction.dir-none {
+  color: var(--phase-stopped);
+}
+
 .meta {
   margin-top: 0.9rem;
   display: flex;
@@ -336,6 +509,35 @@ body {
 
 .controls {
   margin-top: 1rem;
+  display: grid;
+  gap: 0.8rem;
+}
+
+.sim-speed-control {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.8rem;
+}
+
+.sim-speed-control label {
+  color: var(--muted);
+  font-size: 1rem;
+}
+
+.sim-speed-control input[type="range"] {
+  width: min(280px, 60vw);
+  accent-color: var(--gold);
+}
+
+.sim-speed-control output {
+  color: var(--gold-2);
+  font-size: 1rem;
+  font-weight: 700;
+  min-width: 3.8rem;
+}
+
+.control-buttons {
   display: flex;
   flex-wrap: wrap;
   gap: 0.85rem;
@@ -384,5 +586,9 @@ body {
 
   .controls button {
     width: 100%;
+  }
+
+  .thermo-track {
+    height: 350px;
   }
 }
