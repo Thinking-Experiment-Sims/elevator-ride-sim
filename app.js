@@ -172,12 +172,17 @@ function render(state) {
   els.thermoFill.style.height = `${(floorRatio * 100).toFixed(1)}%`;
   els.thermoFill.className = `thermo-fill ${phaseClass}`;
 
-  els.fnLabel.textContent = `F_norm = ${Math.round(state.fn)} N`;
-  els.fgLabel.textContent = `F_grav = ${Math.round(state.fg)} N`;
+  els.fnLabel.innerHTML = `F<sub>norm</sub> = ${Math.round(state.fn)} N`;
+  els.fgLabel.innerHTML = `F<sub>grav</sub> = ${Math.round(state.fg)} N`;
 
-  els.accelLine.textContent = `a = ${state.a.toFixed(1)} m/s^2 (${accelDir})`;
+  els.accelLine.innerHTML = `a = ${state.a.toFixed(1)} m/s<sup>2</sup> (${accelDir})`;
   els.senseLine.textContent = `Sensation: ${state.sensation}`;
-  els.compareLine.textContent = relation === "gt" ? "F_N > F_g" : relation === "lt" ? "F_N < F_g" : "F_N = F_g";
+  els.compareLine.innerHTML =
+    relation === "gt"
+      ? "F<sub>N</sub> &gt; F<sub>g</sub>"
+      : relation === "lt"
+        ? "F<sub>N</sub> &lt; F<sub>g</sub>"
+        : "F<sub>N</sub> = F<sub>g</sub>";
 
   renderAccelerationIndicator(accelDir);
   els.bubble.textContent = getBubbleText(state.phase, state.sensation);
@@ -325,9 +330,9 @@ function updatePhysicsGuide(state, relation, accelDir, floor) {
   const sensationText =
     relation === "gt" ? "heavier" : relation === "lt" ? "lighter" : "normal";
 
-  els.physicsExplain.textContent =
-    `Apparent weight is the normal force. Here F_N = ${fnN} N ${relSymbol} ` +
-    `F_g = ${fgN} N, so Zorro feels ${sensationText}.`;
+  els.physicsExplain.innerHTML =
+    `Apparent weight is the normal force. Here F<sub>N</sub> = ${fnN} N ${relSymbol} ` +
+    `F<sub>g</sub> = ${fgN} N, so Zorro feels ${sensationText}.`;
 
   const speedTol = 0.04;
   const motionDir =
