@@ -11,11 +11,42 @@
   </head>
   <body>
     <main class="app">
-      <p id="status-line" class="status-line"><strong>Status:</strong> At rest on floor 1.</p>
+      <header class="sim-header">
+        <h1>Elevator Ride: Apparent Weight and Normal Force</h1>
+        <p>
+          Self-study focus: use acceleration direction and force comparisons to explain when Zorro feels
+          heavier, lighter, or normal.
+        </p>
+      </header>
+
+      <section class="top-row">
+        <p id="status-line" class="status-line"><strong>Status:</strong> At rest on floor 1.</p>
+        <button id="theme-toggle" type="button" class="theme-toggle">Light mode</button>
+      </section>
 
       <section class="scene-wrap">
         <section class="elevator-panel" aria-label="Elevator scene">
           <div class="elevator-box">
+            <div class="floor-thermometer" aria-live="polite">
+              <div class="thermo-title">Floor</div>
+              <div class="thermo-track">
+                <div id="thermo-fill" class="thermo-fill phase-stopped"></div>
+              </div>
+              <div id="thermo-floor" class="thermo-floor">1</div>
+            </div>
+            <div class="accel-indicator elevator-accel" aria-live="polite">
+              <p class="accel-indicator-title">Acceleration</p>
+              <div id="accel-arrow" class="accel-arrow accel-none" aria-hidden="true">
+                <span class="accel-shaft accel-shaft-left"></span>
+                <span class="accel-shaft accel-shaft-right"></span>
+                <span class="accel-head accel-head-up-left"></span>
+                <span class="accel-head accel-head-up-right"></span>
+                <span class="accel-head accel-head-down-left"></span>
+                <span class="accel-head accel-head-down-right"></span>
+                <span id="accel-marker" class="accel-marker">a</span>
+              </div>
+              <p id="accel-direction" class="accel-direction dir-none">none</p>
+            </div>
             <div id="floor-label" class="floor-label">Floor: 1</div>
 
             <div class="cat-stage" aria-hidden="true">
@@ -44,12 +75,12 @@
             </div>
 
             <div id="fn-arrow" class="fbd-arrow up" aria-hidden="true">
-              <span id="fn-label">F_norm = 784 N</span>
+              <span id="fn-label">F_norm = 44 N</span>
               <i class="congruency-mark"></i>
             </div>
 
             <div id="fg-arrow" class="fbd-arrow down" aria-hidden="true">
-              <span id="fg-label">F_grav = 784 N</span>
+              <span id="fg-label">F_grav = 44 N</span>
               <i class="congruency-mark"></i>
             </div>
           </div>
@@ -57,17 +88,57 @@
       </section>
 
       <section class="meta" role="status" aria-live="polite">
-        <span id="accel-line">a = 0.00 m/s^2 (none)</span>
-        <span id="sense-line">Sensation: normal</span>
-        <span id="compare-line">F_N = F_g</span>
+        <div id="accel-line" class="meta-chip meta-chip-strong">a = 0.00 m/s^2 (none)</div>
+        <div id="compare-line" class="meta-chip meta-chip-strong">F_N = F_g</div>
+        <div id="sense-line" class="meta-chip">Sensation: normal</div>
       </section>
 
       <section class="controls" aria-label="Floor buttons">
-        <button id="go10" type="button">Go to Floor 10</button>
-        <button id="go20" type="button">Go to Floor 20</button>
-        <button id="go1" type="button">Go to Floor 1</button>
-        <button id="pause" type="button" disabled>Pause</button>
-        <button id="reset" type="button" disabled>Reset</button>
+        <div class="sim-speed-control">
+          <label for="sim-speed">Simulation speed</label>
+          <input id="sim-speed" type="range" min="0.5" max="3" step="0.25" value="1" />
+          <output id="sim-speed-out" for="sim-speed">1.00x</output>
+        </div>
+
+        <div class="control-buttons">
+          <button id="go10" type="button">Go to Floor 10</button>
+          <button id="go20" type="button">Go to Floor 20</button>
+          <button id="go1" type="button">Go to Floor 1</button>
+          <button id="pause" type="button" disabled>Pause</button>
+          <button id="reset" type="button" disabled>Reset</button>
+        </div>
+      </section>
+
+      <section class="study-panel" aria-labelledby="study-title">
+        <h2 id="study-title">Physics Guide for Self-Study</h2>
+        <p id="physics-explain" class="physics-explain">
+          Apparent weight comes from the normal force. If F_N = F_g, sensation is normal.
+        </p>
+        <p id="direction-note" class="direction-note">
+          Motion direction and acceleration direction are not always the same.
+        </p>
+
+        <div class="study-columns">
+          <article class="study-card">
+            <h3>Core Model</h3>
+            <ul class="rule-list">
+              <li>F_net = F_N - F_g = m a (upward positive).</li>
+              <li>F_g = m g is constant for a fixed mass.</li>
+              <li>F_N > F_g -> heavier sensation.</li>
+              <li>F_N = F_g -> normal sensation.</li>
+              <li>F_N < F_g -> lighter sensation.</li>
+            </ul>
+          </article>
+
+          <article class="study-card">
+            <h3>Try These Prompts</h3>
+            <ol class="prompt-list">
+              <li>Run 1 -> 20 and record floor ranges for speeding up, cruising, and slowing down.</li>
+              <li>Find a moment when Zorro is moving up but feeling lighter (or moving down but feeling heavier).</li>
+              <li>Use F_N vs F_g and acceleration direction to justify your claim in one sentence.</li>
+            </ol>
+          </article>
+        </div>
       </section>
 
       <p class="attribution">

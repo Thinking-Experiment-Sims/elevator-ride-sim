@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "thinking-experiment-simulation-tokens",
+  "version": "1.0.0",
+  "description": "Cross-simulation style tokens for The Thinking Experiment projects.",
+  "dark": {
+    "bg950": "#090b0f",
+    "bg900": "#11141b",
+    "bg800": "#1e2430",
+    "text100": "#eef2f9",
+    "text300": "#c9d1df",
+    "text500": "#a9b2c3",
+    "gold500": "#c8a24a",
+    "gold400": "#d8b767",
+    "gold300": "#e5cc8f"
+  },
+  "light": {
+    "bgTop": "#e9f4fb",
+    "bgBottom": "#fff4dd",
+    "ink": "#123140",
+    "muted": "#4b6570",
+    "accent": "#0f7e9b",
+    "accentStrong": "#095f76",
+    "border": "#b4d0db",
+    "panel": "#f9fcfe",
+    "panelAlt": "#f3f9fc",
+    "buttonBorder": "#9dbac5",
+    "buttonBg": "#f6fbfd",
+    "buttonTop": "#0d839f",
+    "buttonBottom": "#0b5f77"
+  },
+  "typography": {
+    "uiSans": "\"IBM Plex Sans\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif"
+  },
+  "favicon": {
+    "icon32": "https://vladimirlopez.github.io/the-thinking-experiment/assets/favicon-32.png",
+    "icon16": "https://vladimirlopez.github.io/the-thinking-experiment/assets/favicon-16.png"
+  }
+}

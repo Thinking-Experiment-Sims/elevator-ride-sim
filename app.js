@@ -2,7 +2,7 @@ import { buildRideProfile, sampleStateAtTime, clamp } from "./physics.js";
 
 const GRAVITY = 9.81;
 const FLOOR_HEIGHT_M = 3.0;
-const MASS_KG = 80;
+const MASS_KG = 4.5;
 const MAX_SPEED_MPS = 4.0;
 const ACCEL_FLOORS = 3;
 const ACCEL_DISTANCE_M = ACCEL_FLOORS * FLOOR_HEIGHT_M;
@@ -11,14 +11,23 @@ const ACCEL_MPS2 = (MAX_SPEED_MPS * MAX_SPEED_MPS) / (2 * ACCEL_DISTANCE_M);
 const els = {
   statusLine: document.getElementById("status-line"),
   floorLabel: document.getElementById("floor-label"),
+  thermoFill: document.getElementById("thermo-fill"),
+  thermoFloor: document.getElementById("thermo-floor"),
   bubble: document.getElementById("bubble"),
   fnArrow: document.getElementById("fn-arrow"),
   fgArrow: document.getElementById("fg-arrow"),
   fnLabel: document.getElementById("fn-label"),
   fgLabel: document.getElementById("fg-label"),
+  accelArrow: document.getElementById("accel-arrow"),
+  accelDirection: document.getElementById("accel-direction"),
   accelLine: document.getElementById("accel-line"),
   senseLine: document.getElementById("sense-line"),
   compareLine: document.getElementById("compare-line"),
+  physicsExplain: document.getElementById("physics-explain"),
+  directionNote: document.getElementById("direction-note"),
+  simSpeed: document.getElementById("sim-speed"),
+  simSpeedOut: document.getElementById("sim-speed-out"),
+  themeToggle: document.getElementById("theme-toggle"),
   go10: document.getElementById("go10"),
   go20: document.getElementById("go20"),
   go1: document.getElementById("go1"),
@@ -31,15 +40,19 @@ let targetFloor = 1;
 let running = false;
 let rideInProgress = false;
 let simTime = 0;
+let simSpeed = 1;
 let rafId = null;
 let lastMs = 0;
+let theme = "dark";
 let config = makeConfig(currentFloor, targetFloor);
 let profile = buildRideProfile(config);
 
 init();
 
 function init() {
+  initTheme();
   wireEvents();
+  updateSimSpeedOutput();
   updateButtons();
   render(sampleStateAtTime(profile, 0, config));
 }
@@ -50,6 +63,11 @@ function wireEvents() {
   els.go1.addEventListener("click", () => startRide(1));
   els.pause.addEventListener("click", togglePause);
   els.reset.addEventListener("click", resetRide);
+  els.themeToggle.addEventListener("click", toggleTheme);
+  els.simSpeed.addEventListener("input", () => {
+    simSpeed = clamp(Number(els.simSpeed.value), 0.5, 3);
+    updateSimSpeedOutput();
+  });
 }
 
 function startRide(nextFloor) {
@@ -89,9 +107,10 @@ function resetRide() {
   running = false;
   rideInProgress = false;
   cancelFrame();
-  targetFloor = currentFloor;
+  currentFloor = 1;
+  targetFloor = 1;
   simTime = 0;
-  config = makeConfig(currentFloor, targetFloor);
+  config = makeConfig(1, 1);
   profile = buildRideProfile(config);
   updateButtons();
   render(sampleStateAtTime(profile, 0, config));
@@ -113,7 +132,7 @@ function cancelFrame() {
 function onFrame(now) {
   if (!running) return;
 
-  const dt = Math.min((now - lastMs) / 1000, 0.05);
+  const dt = Math.min((now - lastMs) / 1000, 0.05) * simSpeed;
   lastMs = now;
   simTime = clamp(simTime + dt, 0, profile.totalTime);
 
@@ -140,13 +159,18 @@ function onFrame(now) {
 function render(state) {
   const exactFloor = clamp(config.startFloor + state.y / FLOOR_HEIGHT_M, 1, 20);
   const floorInteger = clamp(Math.round(exactFloor), 1, 20);
+  const floorRatio = (exactFloor - 1) / 19;
 
   const relation = getForceRelation(state.fn, state.fg);
   const accelDir = getAccelerationDirection(state.a);
   const statusText = getStatusText(state.phase, state.a, state.v, floorInteger);
+  const phaseClass = getThermoPhaseClass(state.phase);
 
   els.statusLine.innerHTML = `<strong>Status:</strong> ${statusText}`;
   els.floorLabel.textContent = `Floor: ${floorInteger}`;
+  els.thermoFloor.textContent = String(floorInteger);
+  els.thermoFill.style.height = `${(floorRatio * 100).toFixed(1)}%`;
+  els.thermoFill.className = `thermo-fill ${phaseClass}`;
 
   els.fnLabel.textContent = `F_norm = ${Math.round(state.fn)} N`;
   els.fgLabel.textContent = `F_grav = ${Math.round(state.fg)} N`;
@@ -155,8 +179,37 @@ function render(state) {
   els.senseLine.textContent = `Sensation: ${state.sensation}`;
   els.compareLine.textContent = relation === "gt" ? "F_N > F_g" : relation === "lt" ? "F_N < F_g" : "F_N = F_g";
 
+  renderAccelerationIndicator(accelDir);
   els.bubble.textContent = getBubbleText(state.phase, state.sensation);
   renderFbdArrows(state.fn, state.fg, relation);
+  updatePhysicsGuide(state, relation, accelDir, floorInteger);
+}
+
+function updateSimSpeedOutput() {
+  const label = `${simSpeed.toFixed(2)}x`;
+  els.simSpeedOut.value = label;
+  els.simSpeedOut.textContent = label;
+}
+
+function initTheme() {
+  const saved = window.localStorage.getItem("elevator_theme");
+  if (saved === "light" || saved === "dark") {
+    theme = saved;
+  } else {
+    theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  }
+  applyTheme();
+}
+
+function toggleTheme() {
+  theme = theme === "dark" ? "light" : "dark";
+  applyTheme();
+}
+
+function applyTheme() {
+  document.documentElement.setAttribute("data-theme", theme);
+  els.themeToggle.textContent = theme === "dark" ? "Light mode" : "Dark mode";
+  window.localStorage.setItem("elevator_theme", theme);
 }
 
 /** @param {number} fromFloor @param {number} toFloor */
@@ -198,6 +251,14 @@ function getAccelerationDirection(a) {
   return "none";
 }
 
+/** @param {"accelerating"|"cruising"|"decelerating"|"stopped"} phase */
+function getThermoPhaseClass(phase) {
+  if (phase === "accelerating") return "phase-accelerating";
+  if (phase === "cruising") return "phase-cruising";
+  if (phase === "decelerating") return "phase-decelerating";
+  return "phase-stopped";
+}
+
 /**
  * @param {"accelerating"|"cruising"|"decelerating"|"stopped"} phase
  * @param {number} a
@@ -219,17 +280,86 @@ function getStatusText(phase, a, v, floor) {
 
 /** @param {"accelerating"|"cruising"|"decelerating"|"stopped"} phase @param {"lighter"|"normal"|"heavier"} sensation */
 function getBubbleText(phase, sensation) {
-  if (phase === "stopped") return "Push a button and let's get started!";
-  if (sensation === "heavier") return "Whoa! I feel heavier than normal.";
-  if (sensation === "lighter") return "Whoa! I feel lighter than normal.";
-  return "I feel normal.";
+  if (phase === "stopped") return "Zorro is ready for the ride.";
+  if (sensation === "heavier") return "Zorro feels heavier than normal.";
+  if (sensation === "lighter") return "Zorro feels lighter than normal.";
+  return "Zorro feels normal.";
+}
+
+/** @param {"upward"|"downward"|"none"} accelDir */
+function renderAccelerationIndicator(accelDir) {
+  els.accelArrow.classList.remove("accel-up", "accel-down", "accel-none");
+  els.accelDirection.classList.remove("dir-up", "dir-down", "dir-none");
+
+  if (accelDir === "upward") {
+    els.accelArrow.classList.add("accel-up");
+    els.accelDirection.classList.add("dir-up");
+    els.accelDirection.textContent = "upward ↑";
+    return;
+  }
+
+  if (accelDir === "downward") {
+    els.accelArrow.classList.add("accel-down");
+    els.accelDirection.classList.add("dir-down");
+    els.accelDirection.textContent = "downward ↓";
+    return;
+  }
+
+  els.accelArrow.classList.add("accel-none");
+  els.accelDirection.classList.add("dir-none");
+  els.accelDirection.textContent = "none";
+}
+
+/**
+ * @param {import("./physics.js").SimulationState} state
+ * @param {"gt"|"lt"|"eq"} relation
+ * @param {"upward"|"downward"|"none"} accelDir
+ * @param {number} floor
+ */
+function updatePhysicsGuide(state, relation, accelDir, floor) {
+  if (!els.physicsExplain || !els.directionNote) return;
+
+  const fnN = Math.round(state.fn);
+  const fgN = Math.round(state.fg);
+  const relSymbol = relation === "gt" ? ">" : relation === "lt" ? "<" : "=";
+  const sensationText =
+    relation === "gt" ? "heavier" : relation === "lt" ? "lighter" : "normal";
+
+  els.physicsExplain.textContent =
+    `Apparent weight is the normal force. Here F_N = ${fnN} N ${relSymbol} ` +
+    `F_g = ${fgN} N, so Zorro feels ${sensationText}.`;
+
+  const speedTol = 0.04;
+  const motionDir =
+    state.v > speedTol ? "upward" : state.v < -speedTol ? "downward" : "none";
+
+  if (accelDir === "none") {
+    els.directionNote.textContent =
+      `At floor ${floor}, acceleration is zero, so net force is near zero and sensation is normal.`;
+    return;
+  }
+
+  if (motionDir === "none") {
+    els.directionNote.textContent =
+      `At floor ${floor}, acceleration is ${accelDir}; speed is starting to change from rest.`;
+    return;
+  }
+
+  if (motionDir === accelDir) {
+    els.directionNote.textContent =
+      `At floor ${floor}, motion and acceleration are both ${accelDir}, so speed increases in that direction.`;
+    return;
+  }
+
+  els.directionNote.textContent =
+    `At floor ${floor}, motion is ${motionDir} but acceleration is ${accelDir}, so the elevator is slowing down.`;
 }
 
 /** @param {number} fn @param {number} fg @param {"gt"|"lt"|"eq"} relation */
 function renderFbdArrows(fn, fg, relation) {
   const fgHeight = 140;
   const minFnHeight = 70;
-  const maxFnHeight = 180;
+  const maxFnHeight = 156;
 
   els.fnArrow.classList.remove("larger", "equal");
   els.fgArrow.classList.remove("larger", "equal");
@@ -245,8 +375,8 @@ function renderFbdArrows(fn, fg, relation) {
   }
 
   let fnHeight = clamp((fn / Math.max(fg, 1)) * fgHeight, minFnHeight, maxFnHeight);
-  if (Math.abs(fnHeight - fgHeight) < 24) {
-    fnHeight = relation === "gt" ? fgHeight + 24 : fgHeight - 24;
+  if (Math.abs(fnHeight - fgHeight) < 18) {
+    fnHeight = relation === "gt" ? fgHeight + 18 : fgHeight - 18;
   }
   els.fnArrow.style.height = `${fnHeight}px`;
 
