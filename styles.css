@@ -47,7 +47,7 @@ body {
   margin: 0;
   background: var(--bg-page);
   color: var(--ink);
-  font-family: "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+  font-family: "IBM Plex Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 .app {
@@ -365,9 +365,9 @@ body {
 
 .fbd-arrow span {
   position: absolute;
-  left: 18px;
+  left: 14px;
   width: max-content;
-  font-family: "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+  font-family: "IBM Plex Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(1.05rem, 1.35vw, 1.45rem);
   color: var(--arrow);
   font-weight: 700;
@@ -685,7 +685,7 @@ body {
   border: 2px solid color-mix(in srgb, var(--gold) 60%, #222 40%);
   background: linear-gradient(180deg, #2a3241, #141a24);
   color: var(--gold-2);
-  font-family: "Palatino Linotype", "Book Antiqua", "Times New Roman", serif;
+  font-family: "IBM Plex Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: clamp(1.2rem, 1.8vw, 1.7rem);
   font-weight: 700;
   padding: 0.8rem 1.3rem;
@@ -746,6 +746,16 @@ body {
 [data-theme="light"] .study-card {
   border-color: #bed6de;
   background: #f9fcff;
+}
+
+[data-theme="light"] .physics-explain {
+  color: #123140;
+}
+
+[data-theme="light"] .direction-note,
+[data-theme="light"] .rule-list,
+[data-theme="light"] .prompt-list {
+  color: #294a57;
 }
 
 .controls button:hover {

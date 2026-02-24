@@ -359,7 +359,7 @@ function updatePhysicsGuide(state, relation, accelDir, floor) {
 function renderFbdArrows(fn, fg, relation) {
   const fgHeight = 140;
   const minFnHeight = 70;
-  const maxFnHeight = 180;
+  const maxFnHeight = 156;
 
   els.fnArrow.classList.remove("larger", "equal");
   els.fgArrow.classList.remove("larger", "equal");
@@ -375,8 +375,8 @@ function renderFbdArrows(fn, fg, relation) {
   }
 
   let fnHeight = clamp((fn / Math.max(fg, 1)) * fgHeight, minFnHeight, maxFnHeight);
-  if (Math.abs(fnHeight - fgHeight) < 24) {
-    fnHeight = relation === "gt" ? fgHeight + 24 : fgHeight - 24;
+  if (Math.abs(fnHeight - fgHeight) < 18) {
+    fnHeight = relation === "gt" ? fgHeight + 18 : fgHeight - 18;
   }
   els.fnArrow.style.height = `${fnHeight}px`;
 
