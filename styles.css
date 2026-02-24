@@ -29,6 +29,14 @@
   --phase-cruising: #6f8794;
   --phase-decelerating: #d67b19;
   --phase-stopped: #7b8e95;
+  --light-border: #b4d0db;
+  --light-panel: #f9fcfe;
+  --light-panel-2: #f3f9fc;
+  --light-btn-border: #9dbac5;
+  --light-btn-bg: #f6fbfd;
+  --light-btn-top: #0d839f;
+  --light-btn-bottom: #0b5f77;
+  --light-btn-text: #ffffff;
 }
 
 * {
@@ -684,6 +692,60 @@ body {
   border-radius: 0.45rem;
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
   cursor: pointer;
+}
+
+[data-theme="light"] .elevator-box,
+[data-theme="light"] .fbd-panel,
+[data-theme="light"] .study-panel {
+  border-color: var(--light-border);
+  background: linear-gradient(165deg, var(--light-panel), var(--light-panel-2));
+  box-shadow: 0 10px 20px rgba(12, 54, 68, 0.12);
+}
+
+[data-theme="light"] .fbd-arrow.larger {
+  box-shadow: 0 0 0 3px rgba(15, 126, 155, 0.3);
+}
+
+[data-theme="light"] .thermo-track {
+  background: #f9fcff;
+  border-color: var(--light-border);
+}
+
+[data-theme="light"] .meta-chip {
+  border-color: #c6dde6;
+  background: #f7fcff;
+  color: #4b6570;
+}
+
+[data-theme="light"] #accel-line,
+[data-theme="light"] #compare-line {
+  color: #0b5f77;
+  background: #eef7fb;
+  border-color: #b8d1db;
+}
+
+[data-theme="light"] .controls button {
+  border-color: var(--light-btn-border);
+  background: var(--light-btn-bg);
+  color: #123140;
+  box-shadow: 0 6px 14px rgba(12, 54, 68, 0.12);
+}
+
+[data-theme="light"] .controls button:hover {
+  border-color: #0f7e9b;
+}
+
+[data-theme="light"] .control-buttons button:first-child,
+[data-theme="light"] .control-buttons button:nth-child(2),
+[data-theme="light"] .control-buttons button:nth-child(3) {
+  background: linear-gradient(160deg, var(--light-btn-top), var(--light-btn-bottom));
+  color: var(--light-btn-text);
+  border-color: #0a5d74;
+}
+
+[data-theme="light"] .study-card {
+  border-color: #bed6de;
+  background: #f9fcff;
 }
 
 .controls button:hover {
