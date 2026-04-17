@@ -1,4 +1,5 @@
 :root {
+
   --bg-950: #e9f4fb;
   --bg-900: #fff4dd;
   --bg-800: #ffffff;
@@ -11,7 +12,7 @@
   --shadow-lg: 0 12px 24px rgba(12, 54, 68, 0.12);
 
   --bg-page: radial-gradient(circle at 15% 0%, #1a202c 0%, var(--bg-950) 45%, #050608 100%);
-  --surface: color-mix(in srgb, var(--bg-900) 92%, black 8%);
+  --surface: rgba(255, 255, 255, 0.96);
   --surface-2: color-mix(in srgb, var(--bg-800) 88%, black 12%);
   --ink: var(--text-100);
   --muted: var(--text-300);
@@ -22,6 +23,7 @@
   --phase-cruising: #a9b2c3;
   --phase-decelerating: #e18264;
   --phase-stopped: #6f7886;
+
 }
 
 [data-theme="light"] {
@@ -697,16 +699,8 @@ body {
   background: linear-gradient(160deg, #0d839f, #0b5f77);
   color: #ffffff;
   font-weight: 700;
-
-  border: 2px solid color-mix(in srgb, var(--gold) 60%, #222 40%);
-  background: linear-gradient(180deg, #2a3241, #141a24);
-  color: var(--gold-2);
-  font-family: "IBM Plex Sans", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  font-size: clamp(1.2rem, 1.8vw, 1.7rem);
-  font-weight: 700;
-  padding: 0.8rem 1.3rem;
-  border-radius: 0.45rem;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+  border: 1px solid #0a5d74;
+  padding: 0.58rem 0.82rem;
   cursor: pointer;
 }
 
@@ -745,11 +739,9 @@ body {
   background: linear-gradient(160deg, #0d839f, #0b5f77);
   color: #ffffff;
   font-weight: 700;
-
-  border-color: var(--light-btn-border);
-  background: var(--light-btn-bg);
-  color: #123140;
-  box-shadow: 0 6px 14px rgba(12, 54, 68, 0.12);
+  border: 1px solid #0a5d74;
+  padding: 0.58rem 0.82rem;
+  cursor: pointer;
 }
 
 [data-theme="light"] .controls button:hover {
@@ -872,9 +864,10 @@ body {
   background: linear-gradient(160deg, #0d839f, #0b5f77);
   color: #ffffff;
   font-weight: 700;
-
-    width: 100%;
-  }
+  border: 1px solid #0a5d74;
+  padding: 0.58rem 0.82rem;
+  cursor: pointer;
+}
 
   .thermo-track {
     height: 305px;
